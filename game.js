@@ -15,7 +15,7 @@ const familyTree = document.getElementById("familyTree");
 const showFamilyTree = document.getElementById("showFamilyTree");
 const tickingSFX = document.getElementById("tickingSFX");
 
-showFamilyTree.addEventListener("click", function(e) {
+showFamilyTree.addEventListener("click", function (e) {
     familyTree.style.display = "flex";
 });
 
@@ -29,6 +29,26 @@ function randomDate(start, end) {
 
 function rand_int(max) {
     return Math.floor(my_rng.quick() * max);
+}
+
+class LifeStage {
+    static Baby = 0;
+    static Child = 1;
+    static Teenager = 2;
+    static Adult = 3;
+    static Elder = 4;
+
+    static #labels = {
+        [LifeStage.Baby]: "Baby",
+        [LifeStage.Child]: "Child",
+        [LifeStage.Teenager]: "Teenager",
+        [LifeStage.Adult]: "Adult",
+        [LifeStage.Elder]: "Elder"
+    };
+
+    static getString(stage) {
+        return this.#labels[stage] ?? "Undefined";
+    }
 }
 
 class Relation {
@@ -105,10 +125,10 @@ Object.entries(stats).forEach(([key, icon]) => {
     meter.classList.add("piechart");
     meter.textContent = icon;
     meter.style.setProperty("--p", your[key]);
-    meter.addEventListener("mouseover", function(e) {
+    meter.addEventListener("mouseover", function (e) {
         meter.textContent = your[key] + "%";
     });
-    meter.addEventListener("mouseleave", function(e) {
+    meter.addEventListener("mouseleave", function (e) {
         meter.textContent = icon;
     });
 
@@ -126,7 +146,7 @@ function update_meters() {
     close_btn.textContent = "x";
     close_btn.style.cursor = "pointer";
     close_btn.style.textDecoration = "underline";
-    close_btn.addEventListener("click", function(e) {
+    close_btn.addEventListener("click", function (e) {
         familyTree.style.display = "none";
     });
     familyTree.append(close_btn);
@@ -143,7 +163,7 @@ function update_meters() {
 function begin() {
     let common_surname = surnames[rand_int(surnames.length)];
     let father = new Person({
-        gender: "male", 
+        gender: "male",
         name: boy_names[rand_int(boy_names.length)],
         money: rand_int(200000),
         age: rand_int(40) + 18,
@@ -151,7 +171,7 @@ function begin() {
     });
 
     let mother = new Person({
-        gender: "female", 
+        gender: "female",
         name: girl_names[rand_int(girl_names.length)],
         money: rand_int(200000),
         age: rand_int(30) + 18,
@@ -199,7 +219,7 @@ window.addEventListener('beforeunload', function (event) {
     return (event.returnValue = "");
 });
 
-ageUp.addEventListener("click", function(){
+ageUp.addEventListener("click", function () {
     years_passed++
     your.age++
     for (let entry in your.family) {
@@ -207,8 +227,25 @@ ageUp.addEventListener("click", function(){
         person.age++
     }
     update_meters();
-    header("You are now " + your.age + " years old.");
+    header("Age: " + your.age);
     tickingSFX.play();
 });
 
 begin();
+
+const notice = document.getElementById("notice");
+
+function plssenpainoticeme() {
+    let delay = rand_int(30) * 1000;
+    if (!notice.playing) { notice.play(0); }
+    setTimeout(plssenpainoticeme, delay + 15000);
+}
+
+plssenpainoticeme();
+
+const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+events.forEach(eventType => {
+    window.addEventListener(eventType, () => {
+        notice.pause();
+    }, { passive: true });
+});
