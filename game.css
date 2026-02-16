@@ -45,6 +45,7 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
 #textContainer {
     margin: 10px;
@@ -67,7 +68,7 @@ body {
     width: 40px;
     aspect-ratio: 1/1;
     border-radius: 50%;
-    background: conic-gradient(var(--color) calc(var(--p) * 1%), transparent 0);
+    background: conic-gradient(rgb(255,0,calc(var(--p) * 3)) calc(var(--p) * 1%), transparent 0);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -92,4 +93,9 @@ body {
 
 #close {
     cursor: pointer;
+}
+
+.choice-modal {
+    border: 1px solid white;
+    padding: 10px;
 }

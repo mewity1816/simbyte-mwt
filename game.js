@@ -14,6 +14,7 @@ const navbar = document.getElementById("navbar");
 const familyTree = document.getElementById("familyTree");
 const showFamilyTree = document.getElementById("showFamilyTree");
 const tickingSFX = document.getElementById("tickingSFX");
+const yourInfo = document.getElementById("yourInfo");
 
 showFamilyTree.addEventListener("click", function (e) {
     familyTree.style.display = "flex";
@@ -73,6 +74,25 @@ class Relation {
 
 const div = document.createElement("div");
 navbar.append(div);
+
+class LifeEvent {
+    constructor({ id, title, description, chance, minAge = 0, maxAge = 100, criteria = () => true, effect = () => { } }) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.chance = chance; // 0.0 to 1.0
+        this.minAge = minAge;
+        this.maxAge = maxAge;
+        this.criteria = criteria; // function that returns true/false
+        this.effect = effect;     // function that modifies the 'your' object
+    }
+
+    isEligible(person) {
+        return person.age >= this.minAge &&
+            person.age <= this.maxAge &&
+            this.criteria(person);
+    }
+}
 
 class Person {
     constructor({
@@ -154,18 +174,17 @@ function update_meters() {
         let person = your.family[entry]["person"];
         let relation = your.family[entry]["relation"];
         let new_entry = document.createElement("span");
-        new_entry.textContent = Relation.getString(relation) + " " + person.gender + " - " + person.name + " " + person.surname + " - " + person.age;
+        new_entry.textContent = person.gender + " " + Relation.getString(relation).toLowerCase() + " - " + person.name + " " + person.surname + " - " + person.age + " - §" + person.money;
         familyTree.append(new_entry);
     }
+    yourInfo.textContent = your.name + " " + your.surname + " - §" + your.money;
 }
-
 
 function begin() {
     let common_surname = surnames[rand_int(surnames.length)];
     let father = new Person({
         gender: "male",
         name: boy_names[rand_int(boy_names.length)],
-        money: rand_int(200000),
         age: rand_int(40) + 18,
         surname: common_surname,
     });
@@ -173,14 +192,20 @@ function begin() {
     let mother = new Person({
         gender: "female",
         name: girl_names[rand_int(girl_names.length)],
-        money: rand_int(200000),
         age: rand_int(30) + 18,
         surname: common_surname,
     });
 
+    mother.money = mother.careerPotential * 1000;
+    father.money = father.careerPotential * 1000;
+
     your.gender = 0 == rand_int(2) ? "male" : "female";
     your.name = your.gender == "male" ? boy_names[rand_int(boy_names.length)] : girl_names[rand_int(girl_names.length)];
     your.surname = common_surname;
+
+    your.health = (father.health + mother.health) / 2;
+    your.intelligence = (father.intelligence + mother.intelligence) / 2;
+    your.looks = (father.looks + mother.looks) / 2;
 
     your.family.push({ person: father, relation: Relation.Parent });
     your.family.push({ person: mother, relation: Relation.Parent });
@@ -209,9 +234,17 @@ function space() {
 }
 
 function header(urtext) {
-    let txt = document.createElement("h3");
+    let txt = document.createElement("h2");
     txt.textContent = urtext;
     textContainer.append(txt);
+}
+
+function clamp(num, min, max) {
+    return num <= min
+        ? min
+        : num >= max
+            ? max
+            : num
 }
 
 window.addEventListener('beforeunload', function (event) {
@@ -219,33 +252,128 @@ window.addEventListener('beforeunload', function (event) {
     return (event.returnValue = "");
 });
 
+function processYearlyEvents(person) {
+    const eligibleEvents = eventPool.filter(ev => ev.isEligible(person));
+
+    eligibleEvents.forEach(event => {
+        if (Math.random() < event.chance) {
+            header(event.title);
+            print(event.description);
+            event.effect(person);
+        }
+    });
+
+    person.happiness = clamp(person.happiness, 0, 100);
+    person.intelligence = clamp(person.intelligence, 0, 100);
+    person.looks = clamp(person.looks, 0, 100);
+    person.health = clamp(person.health, 0, 100);
+}
+
+let canAgeUp = true;
+
 ageUp.addEventListener("click", function () {
+    if (!canAgeUp) return;
     years_passed++
     your.age++
     for (let entry in your.family) {
         let person = your.family[entry]["person"];
         person.age++
     }
-    update_meters();
     header("Age: " + your.age);
+    processYearlyEvents(your);
+    update_meters();
     tickingSFX.play();
 });
 
-begin();
+function presentChoice(title, description, options) {
+    const choiceDiv = document.createElement("div");
+    choiceDiv.className = "choice-modal";
+    choiceDiv.innerHTML = `<h3>${title}</h3><p>${description}</p>`;
 
-const notice = document.getElementById("notice");
+    options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt.text;
+        btn.onclick = () => {
+            opt.callback();
+            choiceDiv.remove();
+            canAgeUp = true;
+            update_meters();
+        };
+        choiceDiv.appendChild(btn);
+    });
 
-function plssenpainoticeme() {
-    let delay = rand_int(30) * 1000;
-    if (!notice.playing) { notice.play(0); }
-    setTimeout(plssenpainoticeme, delay + 15000);
+    document.body.appendChild(choiceDiv);
+    canAgeUp = false;
 }
 
-plssenpainoticeme();
+const eventPool = [
+    new LifeEvent({
+        id: "flu_shot",
+        title: "I feel like shit!",
+        description: "You caught a nasty disease.",
+        chance: 0.1,
+        minAge: 5,
+        maxAge: 50,
+        effect: (p) => {
+            p.health -= 25;
+            p.happiness -= 30;
+            print("You spent a week in bed shivering.");
+        }
+    }),
+    new LifeEvent({
+        id: "bully_encounter",
+        title: "Bully",
+        description: "Someone named Quantavious is harassing you.",
+        chance: 0.15,
+        minAge: 7,
+        maxAge: 12,
+        criteria: (p) => p.looks < 40,
+        effect: (p) => {
+            p.happiness -= 5;
+            print("Quantavious said you resembled the 67 kid. It hurt a lil.");
+        }
+    }),
+    new LifeEvent({
+        id: "tweaker_alert",
+        title: "Tweaker Alert!!!",
+        description: "A tweaker on the street assaulted you.",
+        chance: 0.05,
+        minAge: 20,
+        maxAge: 50,
+        effect: (p) => {
+            p.happiness -= 30;
+            p.health -= 30;
+            print("Your entire body hurts.");
+        }
+    }),
+    new LifeEvent({
+        id: "dropped_wallet",
+        title: "Found a Wallet",
+        description: "You found a wallet on the floor with $50 inside.",
+        chance: 0.08,
+        minAge: 10,
+        maxAge: 70, // cant bend over after that age
+        effect: (p) => {
+            presentChoice("The Moral Dilemma", "What do you do with the cash?", [
+                {
+                    text: "Keep it",
+                    callback: () => {
+                        p.money += 50;
+                        p.happiness += 5;
+                        print("You're $50 richer. No regrets.");
+                    }
+                },
+                {
+                    text: "Return it",
+                    callback: () => {
+                        p.happiness += 20;
+                        p.intelligence += 2;
+                        print("The owner was so grateful! You feel like a saint.");
+                    }
+                }
+            ]);
+        }
+    })
+];
 
-const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
-events.forEach(eventType => {
-    window.addEventListener(eventType, () => {
-        notice.pause();
-    }, { passive: true });
-});
+begin();
