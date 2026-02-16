@@ -8,14 +8,6 @@ class ZodiacSign {
     }
 }
 
-const textContainer = document.getElementById("textContainer");
-const ageUp = document.getElementById("ageUp");
-const navbar = document.getElementById("navbar");
-const familyTree = document.getElementById("familyTree");
-const showFamilyTree = document.getElementById("showFamilyTree");
-const tickingSFX = document.getElementById("tickingSFX");
-const yourInfo = document.getElementById("yourInfo");
-
 showFamilyTree.addEventListener("click", function (e) {
     familyTree.style.display = "flex";
 });
