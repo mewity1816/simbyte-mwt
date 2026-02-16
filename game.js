@@ -67,16 +67,30 @@ class Relation {
 const div = document.createElement("div");
 navbar.append(div);
 
+class Relative {
+    constructor(person, relation) {
+        this.person = person;
+        this.relation = relation;
+        this.kindness = 100;
+    }
+}
+
 class LifeEvent {
     constructor({ id, title, description, chance, minAge = 0, maxAge = 100, criteria = () => true, effect = () => { } }) {
         this.id = id;
         this.title = title;
-        this.description = description;
+        this._description = description;
         this.chance = chance; // 0.0 to 1.0
         this.minAge = minAge;
         this.maxAge = maxAge;
         this.criteria = criteria; // function that returns true/false
         this.effect = effect;     // function that modifies the 'your' object
+    }
+
+    get description() {
+        return typeof this._description === 'function' 
+            ? this._description() 
+            : this._description;
     }
 
     isEligible(person) {
@@ -166,7 +180,7 @@ function update_meters() {
         let person = your.family[entry]["person"];
         let relation = your.family[entry]["relation"];
         let new_entry = document.createElement("span");
-        new_entry.textContent = person.gender + " " + Relation.getString(relation).toLowerCase() + " - " + person.name + " " + person.surname + " - " + person.age + " - §" + person.money;
+        new_entry.textContent = person.gender + " " + Relation.getString(relation).toLowerCase() + " - " + person.name + " " + person.surname + " - " + person.age;
         familyTree.append(new_entry);
     }
     yourInfo.textContent = your.name + " " + your.surname + " - §" + your.money;
@@ -277,10 +291,10 @@ ageUp.addEventListener("click", function () {
     tickingSFX.play();
 });
 
-function presentChoice(title, description, options) {
+function presentChoice(description, options) {
     const choiceDiv = document.createElement("div");
     choiceDiv.className = "choice-modal";
-    choiceDiv.innerHTML = `<h3>${title}</h3><p>${description}</p>`;
+    choiceDiv.innerHTML = `<p>${description}</p>`;
 
     options.forEach(opt => {
         const btn = document.createElement("button");
@@ -300,10 +314,40 @@ function presentChoice(title, description, options) {
 
 const eventPool = [
     new LifeEvent({
-        id: "flu_shot",
+        id: "vegetables",
+        title: "Plis No BroColly.",
+        description: () => 0 == rand_int(2) 
+            ? "Your father is forcing you to eat your greens." 
+            : "Your mother is forcing you to eat your greens.",
+        chance: 0.25,
+        minAge: 2,
+        maxAge: 6,
+        effect: (p) => {
+            presentChoice("Will you make it easy?", [
+                {
+                    text: "Accept regardless of taste.",
+                    callback: () => {
+                        p.intelligence += 5;
+                        p.happiness -= 5;
+                        p.health += 5;
+                        print("Never again.");
+                    }
+                },
+                {
+                    text: "Throw your plate at them.",
+                    callback: () => {
+                        p.health += 5;
+                        print("You were forced to eat it anyways.");
+                    }
+                }
+            ]);
+        }
+    }),
+    new LifeEvent({
+        id: "sickness",
         title: "I feel like shit!",
         description: "You caught a nasty disease.",
-        chance: 0.1,
+        chance: 0.05,
         minAge: 5,
         maxAge: 50,
         effect: (p) => {
@@ -316,9 +360,9 @@ const eventPool = [
         id: "bully_encounter",
         title: "Bully",
         description: "Someone named Quantavious is harassing you.",
-        chance: 0.15,
-        minAge: 7,
-        maxAge: 12,
+        chance: 0.5,
+        minAge: 6,
+        maxAge: 14,
         criteria: (p) => p.looks < 40,
         effect: (p) => {
             p.happiness -= 5;
@@ -339,6 +383,23 @@ const eventPool = [
         }
     }),
     new LifeEvent({
+        id: "school_start",
+        title: "Fresh meat",
+        description: "You're starting school.",
+        chance: 1,
+        minAge: 6,
+        maxAge: 6,
+        effect: (p) => {
+            if (p.intelligence > 50) {
+                print("You're hyped.");
+                p.happiness += 10;
+            } else {
+                print("You're anxious.");
+                p.happiness -= 10;
+            }
+        }
+    }),
+    new LifeEvent({
         id: "dropped_wallet",
         title: "Found a Wallet",
         description: "You found a wallet on the floor with $50 inside.",
@@ -346,7 +407,7 @@ const eventPool = [
         minAge: 10,
         maxAge: 70, // cant bend over after that age
         effect: (p) => {
-            presentChoice("The Moral Dilemma", "What do you do with the cash?", [
+            presentChoice("What do you do with the cash?", [
                 {
                     text: "Keep it",
                     callback: () => {
