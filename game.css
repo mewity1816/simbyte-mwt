@@ -68,7 +68,10 @@ body {
     width: 40px;
     aspect-ratio: 1/1;
     border-radius: 50%;
-    background: conic-gradient(rgb(255,0,calc(var(--p) * 3)) calc(var(--p) * 1%), transparent 0);
+    --h: calc(var(--p) / 100);
+    background: conic-gradient(
+        color(srgb calc(1 - var(--h)) var(--h) 0) calc(var(--p) * 1%),
+        transparent 0);
     display: flex;
     justify-content: center;
     align-items: center;
