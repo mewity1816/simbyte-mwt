@@ -9,7 +9,7 @@ class ZodiacSign {
 }
 
 showFamilyTree.addEventListener("click", function (e) {
-    familyTree.style.display = "flex";
+    infoBox.style.display = "flex";
 });
 
 var my_rng = new Math.seedrandom();
@@ -167,23 +167,28 @@ function update_meters() {
     for (let key in meter_elements) {
         meter_elements[key].style.setProperty("--p", your[key]);
     }
-    familyTree.innerHTML = null;
+    infoBox.innerHTML = null;
     let close_btn = document.createElement("span");
     close_btn.textContent = "x";
     close_btn.style.cursor = "pointer";
     close_btn.style.textDecoration = "underline";
     close_btn.addEventListener("click", function (e) {
-        familyTree.style.display = "none";
+        infoBox.style.display = "none";
     });
-    familyTree.append(close_btn);
+    infoBox.append(close_btn);
     for (let entry in your.family) {
         let person = your.family[entry]["person"];
         let relation = your.family[entry]["relation"];
         let new_entry = document.createElement("span");
         new_entry.textContent = person.gender + " " + Relation.getString(relation).toLowerCase() + " - " + person.name + " " + person.surname + " - " + person.age;
-        familyTree.append(new_entry);
+        infoBox.append(new_entry);
     }
     yourInfo.textContent = your.name + " " + your.surname + " - §" + your.money;
+
+    textContainer.scrollTo({
+        top: textContainer.scrollHeight,
+        behavior: 'smooth'
+    });
 }
 
 function begin() {
@@ -308,7 +313,7 @@ function presentChoice(description, options) {
         choiceDiv.appendChild(btn);
     });
 
-    document.body.appendChild(choiceDiv);
+    textContainer.appendChild(choiceDiv);
     canAgeUp = false;
 }
 
