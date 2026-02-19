@@ -518,7 +518,7 @@ const eventPool = [
         chance: 0.5,
         minAge: 6,
         maxAge: 14,
-        criteria: (p) => p.looks < 40 || p.respect < 40,
+        criteria: (p) => (p.looks + p.respect)/2 < 100,
         effect: (p) => {
             p.happiness -= 5;
             presentChoice("Will you let this slide?", [
