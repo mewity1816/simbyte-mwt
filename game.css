@@ -35,7 +35,10 @@ body {
     padding: 10px;
     border: 1px solid var(--color);
 }
+button {
+    font-family: pxl;
 
+}
 .button:hover {
     cursor: pointer;
 }
@@ -57,7 +60,7 @@ body {
     align-items: center;
 }
 
-#infoBox {
+.infoBox {
     position: fixed;
     top: 0;
     right: 0;
