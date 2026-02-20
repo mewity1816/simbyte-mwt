@@ -262,7 +262,7 @@ export const infoBoxPanels = {
             let new_entry = document.createElement("button");
             new_entry.textContent = `${name} - $${price}`;
             new_entry.onclick = () => {
-                if (state.your.money > price) {
+                if (state.your.money >= price) {
                     let softness_match = shopItems[item].softness * state.your.softness;
                     let sweetness_match = shopItems[item].sweetness * state.your.sweetness;
                     let spicyness_match = shopItems[item].spicyness * state.your.spicyness;
@@ -270,7 +270,9 @@ export const infoBoxPanels = {
                     let crunchyness_match = shopItems[item].crunchyness * state.your.crunchyness;
                     let total_enjoyment = softness_match + sweetness_match + spicyness_match + bitterness_match + crunchyness_match;
                     total_enjoyment *= 20;
+                    total_enjoyment = Math.floor(total_enjoyment);
                     state.your.happiness += total_enjoyment;
+                    state.your.money -= price;
                     print(`You bought and consumed ${name}, it made you ${total_enjoyment}% happier`)
                     state.canInteract = true;
                 } else {
