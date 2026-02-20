@@ -1,6 +1,4 @@
-import { rand_int } from "./rng.js";
-
-export class LifeStage {
+class LifeStage {
     static Baby = 0;
     static Child = 1;
     static Teenager = 2;
@@ -20,7 +18,7 @@ export class LifeStage {
     }
 }
 
-export class Relation {
+class Relation {
     static Parent = 0;
     static Partner = 1;
     static Mascot = 2;
@@ -40,7 +38,7 @@ export class Relation {
     }
 }
 
-export class Relative {
+class Relative {
     constructor(person, relation) {
         this.person = person;
         this.relation = relation;
@@ -48,7 +46,7 @@ export class Relative {
     }
 }
 
-export class LifeEvent {
+class LifeEvent {
     constructor({ id, title, description, chance, minAge = 0, maxAge = 100, criteria = () => true, effect = () => { } }) {
         this.id = id;
         this.title = title;
@@ -73,7 +71,7 @@ export class LifeEvent {
     }
 }
 
-export class Person {
+class Person {
     constructor({
         age = 0,
         money = 0,
@@ -123,7 +121,7 @@ export class Person {
     }
 }
 
-export class Occupation {
+class Occupation {
     constructor({
         needed_intelligence = 0.0,
         income = 0,
@@ -135,7 +133,7 @@ export class Occupation {
     }
 }
 
-export class Effect {
+class Effect {
     constructor({
         health = 0.0,
         happiness = 0.0,
@@ -158,7 +156,7 @@ export class Effect {
     }
 }
 
-export class Consumable {
+class Consumable {
     constructor({
         // palate
         sweetness = 0.0,
@@ -185,7 +183,7 @@ export class Consumable {
     }
 }
 
-export class ZodiacSign {
+class ZodiacSign {
     static signs = { en: ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces",], };
     constructor(e) { isNaN(Date.parse(e)) || ((this.sign = this.#a(e)), (this.chinese = this.#a(e))); }
     #a(e) {

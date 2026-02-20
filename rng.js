@@ -252,7 +252,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     Math    // math: package containing random, pow, and seedrandom
 );
 
-export var my_rng = new Math.seedrandom();
-export function rand_int(max) {
+var my_rng = new Math.seedrandom();
+function rand_int(max) {
     return Math.floor(my_rng.quick() * max);
 }

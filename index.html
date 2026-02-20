@@ -8,11 +8,13 @@
 </head>
 
 <body>
-    <script type="module" src="game.js"></script>
     <audio src="ticking.m4a" id="tickingSFX"></audio>
     <audio src="twinkle.ogg" id="twinkleSFX"></audio>
     <audio src="notice.ogg" id="noticeSFX"></audio>
     <div class="content">
+        <div id="navbar">
+            <span id="yourInfo"></span>
+        </div>
         <div id="textContainer"></div>
         <div class="moveToLeft">
             <div class="flexColumn" id="effectsList">
@@ -24,11 +26,20 @@
                 <span class="button" id="showFamilyTree">family</span>
                 <span class="button" id="showShop">shop</span>
             </div>
-            <span id="yourInfo"></span>
             <div id="yourStatistics"></div>
         </div>
     </div>
     <div id="infoBox" style="display:none; " class="infoBox"></div>
+    <script src="rng.js"></script>
+    <script src="class.js"></script>
+    <script src="data.js"></script>
+    <script>
+        let your = new Person();
+        let canInteract = true;
+        let currentIBPanel = infoBoxPanels.family;
+    </script>
+    <script src="helper.js"></script>
+    <script type="module" src="game.js"></script>
 </body>
 
 </html>

@@ -1,121 +1,3 @@
-import { state } from "./state.js";
-import { boy_names, girl_names, surnames, eventPool, consumables, infoBoxPanels } from "./data.js";
-import { rand_int } from "./rng.js";
-import { Person, Relation, ZodiacSign } from "./class.js";
-
-let currentIBPanel = infoBoxPanels.family;
-
-let meter_elements = {};
-const stats = {
-    strength: "💪",
-    respect: "🤝",
-    happiness: "☺️",
-    intelligence: "💡",
-    health: "💊",
-    looks: "👁️"
-};
-
-Object.entries(stats).forEach(([key, icon]) => {
-    const meter = document.createElement("span");
-    meter.classList.add("piechart");
-    meter.textContent = icon;
-    meter.style.setProperty("--p", state.your[key]);
-    meter.addEventListener("mouseover", function (e) {
-        meter.textContent = state.your[key] + "%";
-    });
-    meter.addEventListener("mouseleave", function (e) {
-        meter.textContent = icon;
-    });
-
-    yourStatistics.append(meter);
-    meter_elements[key] = meter;
-});
-
-export function update_meters() {
-    for (let key in meter_elements) {
-        meter_elements[key].style.setProperty("--p", state.your[key]);
-    }
-
-    infoBox.innerHTML = null;
-
-    let close_btn = document.createElement("span");
-    close_btn.textContent = "x";
-    close_btn.style.cursor = "pointer";
-    close_btn.style.textDecoration = "underline";
-
-    close_btn.addEventListener("click", function (e) {
-        infoBox.style.display = "none";
-    });
-
-    infoBox.append(close_btn);
-
-    currentIBPanel.call();
-
-    effectsList.innerHTML = null;
-
-    console.log(state.your);
-    for (let e in state.your.effects) {
-        const effect = state.your.effects[e];
-        let effectDiv = document.createElement("div");
-        let iconSpan = document.createElement("span");
-        iconSpan.textContent = effect.icon;
-        effectDiv.append(iconSpan);
-
-        let infoDiv = document.createElement("div");
-        infoDiv.style.display = "none";
-
-        effectDiv.append(infoDiv);
-
-        let nameDiv = document.createElement("div");
-        let effectName = document.createElement("strong");
-        effectName.textContent = effect.name;
-        nameDiv.append(effectName);
-
-        infoDiv.append(nameDiv);
-
-        let descDiv = document.createElement("div");
-        descDiv.classList.add("flexColumn")
-        let descText = document.createElement("span");
-        descText = effect.description;
-
-        descDiv.append(descText);
-
-        Object.entries(stats).forEach(([key, _]) => {
-            if (effect[key]) {
-                let textElement = document.createElement("span");
-                textElement.textContent = effect[key] + " " + key + ".";
-                descDiv.append(textElement);
-            }
-        });
-        
-        effectDiv.addEventListener("click", function (e) {
-            if (infoDiv.style.display == "none") {
-                infoDiv.style.display = ""
-                nameDiv.prepend(iconSpan);
-            } else {
-                effectDiv.append(iconSpan);
-                infoDiv.style.display = "none"
-            }
-        });
-
-        infoDiv.append(descDiv);
-        effectDiv.append(infoDiv);
-        effectsList.append(effectDiv);
-    }
-
-    state.your.happiness = clamp(state.your.happiness, 0, 100);
-    state.your.intelligence = clamp(state.your.intelligence, 0, 100);
-    state.your.looks = clamp(state.your.looks, 0, 100);
-    state.your.health = clamp(state.your.health, 0, 100);
-
-    yourInfo.textContent = `${state.your.name} ${state.your.surname} - $${state.your.money}`;
-
-    textContainer.scrollTo({
-        top: textContainer.scrollHeight,
-        behavior: 'smooth'
-    });
-}
-
 function begin() {
     let common_surname = surnames[rand_int(surnames.length)];
     let father = new Person({
@@ -138,70 +20,44 @@ function begin() {
     father.strength = father.health/2 + rand_int(father.health/2);
 
     if (rand_int(500) == 255) {
-        state.your.gender = "intersex";
+        your.gender = "intersex";
     } else {
-        state.your.gender = 0 == rand_int(2) ? "male" : "female";
+        your.gender = 0 == rand_int(2) ? "male" : "female";
     }
-    state.your.name = state.your.gender == "male" ? boy_names[rand_int(boy_names.length)] : girl_names[rand_int(girl_names.length)];
-    state.your.surname = common_surname;
 
-    state.your.health = (father.health + mother.health) / 2;
-    state.your.intelligence = (father.intelligence + mother.intelligence) / 2;
-    state.your.looks = (father.looks + mother.looks) / 2;
-    state.your.strength = state.your.health/2 + rand_int(state.your.health/2);
+    your.name = your.gender == "male" ? boy_names[rand_int(boy_names.length)] : girl_names[rand_int(girl_names.length)];
+    your.surname = common_surname;
 
-    state.your.family.push({ person: father, relation: Relation.Parent });
-    state.your.family.push({ person: mother, relation: Relation.Parent });
+    your.health = (father.health + mother.health) / 2;
+    your.intelligence = (father.intelligence + mother.intelligence) / 2;
+    your.looks = (father.looks + mother.looks) / 2;
+    your.strength = your.health/2 + rand_int(your.health/2);
+
+    your.family.push({ person: father, relation: Relation.Parent });
+    your.family.push({ person: mother, relation: Relation.Parent });
 
     update_meters();
 
     header("Age: 0. Welcome to Fortnite.");
-    print(`I was born ${state.your.gender}. My name is ${state.your.name} ${state.your.surname}`);
-    print(`I was born on the fateful day of ${state.your.birthday.toLocaleString('default', { month: 'long' })} ${state.your.birthday.getDate()}, as a ${new ZodiacSign(state.your.birthday).sign}`);
+    print(`I was born ${your.gender}. My name is ${your.name} ${your.surname}`);
+    print(`I was born on the fateful day of ${your.birthday.toLocaleString('default', { month: 'long' })} ${your.birthday.getDate()}, as a ${new ZodiacSign(your.birthday).sign}`);
     space();
     print(`My father is ${father.name} ${father.surname} of ${father.age} years old`);
     print(`My mother is ${mother.name} ${mother.surname} of ${mother.age} years old`);
 }
 
-export function print(urtext) {
-    let txt = document.createElement("span");
-    txt.textContent = urtext;
-    textContainer.append(txt);
-    let br = document.createElement("br");
-    textContainer.append(br);
-}
-
-function space() {
-    let br = document.createElement("br");
-    textContainer.append(br);
-}
-
-function header(urtext) {
-    let txt = document.createElement("h2");
-    txt.textContent = urtext;
-    textContainer.append(txt);
-}
-
-function clamp(num, min, max) {
-    return num <= min
-        ? min
-        : num >= max
-            ? max
-            : num
-}
-
 function processYearlyEvents(person) {
     const eligibleEvents = eventPool.filter(ev => ev.isEligible(person));
 
-    for (let e in state.your.effects) {
-        const effect = state.your.effects[e];
+    for (let e in your.effects) {
+        const effect = your.effects[e];
         Object.entries(stats).forEach(([key, _]) => {
             if (effect[key]) {
-                state.your[key] += effect[key];
+                your[key] += effect[key];
             }
         });
         if (effect.monetary) {
-            state.your[key] += effect[key];
+            your.money += effect.monetary;
         }
     }
 
@@ -219,49 +75,28 @@ function processYearlyEvents(person) {
     person.health = clamp(person.health, 0, 100);
 }
 
-export function presentChoice(description, options) {
-    const choiceDiv = document.createElement("div");
-    choiceDiv.className = "choice-modal";
-    choiceDiv.innerHTML = `<p>${description}</p>`;
-    twinkleSFX.play();
-    options.forEach(opt => {
-        const btn = document.createElement("button");
-        btn.textContent = opt.text;
-        btn.onclick = () => {
-            opt.callback();
-            choiceDiv.remove();
-            state.canInteract = true;
-            update_meters();
-        };
-        choiceDiv.appendChild(btn);
-    });
-
-    textContainer.appendChild(choiceDiv);
-    state.canInteract = false;
-}
-
 ageUp.addEventListener("click", function () {
-    if (!state.canInteract) return;
-    state.your.age++
-    for (let entry in state.your.family) {
-        let person = state.your.family[entry]["person"];
+    if (!canInteract) return;
+    your.age++
+    for (let entry in your.family) {
+        let person = your.family[entry]["person"];
         person.age++
     }
-    header("Age: " + state.your.age);
-    processYearlyEvents(state.your);
+    header("Age: " + your.age);
+    processYearlyEvents(your);
     update_meters();
     tickingSFX.play();
 });
 
 showShop.addEventListener("click", function (e) {
-    if (!state.canInteract) return;
+    if (!canInteract) return;
     currentIBPanel = infoBoxPanels.shop;
     update_meters();
     infoBox.style.display = "flex";
 });
 
 showFamilyTree.addEventListener("click", function (e) {
-    if (!state.canInteract) return;
+    if (!canInteract) return;
     currentIBPanel = infoBoxPanels.family;
     update_meters();
     infoBox.style.display = "flex";
