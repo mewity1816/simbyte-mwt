@@ -135,6 +135,30 @@ export class Occupation {
     }
 }
 
+export class Effect {
+    constructor({
+        // THESE ARE MULTIPLIERS!!
+        health_impact = 0.0,
+        happiness_impact = 0.0,
+        intelligence_impact = 0.0,
+        looks_impact = 0.0,
+        monetary_impact = 0.0,
+
+        icon = "",
+        name = "",
+        description = "",
+    } = {}) {
+        this.health_impact = health_impact;
+        this.happiness_impact = happiness_impact;
+        this.intelligence_impact = intelligence_impact;
+        this.looks_impact = looks_impact;
+        this.monetary_impact = monetary_impact;
+        this.icon = icon;
+        this.name = name;
+        this.description = description;
+    }
+}
+
 export class Consumable {
     constructor({
         // palate
@@ -146,8 +170,7 @@ export class Consumable {
         crunchyness = 0.0,
         softness = 0.0,
 
-        // addictions
-        widthdrawal = 0.0,
+        widthdrawal = null,
 
         price = 0,
         name = "",
@@ -160,28 +183,6 @@ export class Consumable {
         this.widthdrawal = widthdrawal;
         this.price = price;
         this.name = name;
-    }
-}
-
-export class Effect {
-    constructor({
-        needs = new Consumable,
-        health_impact = 0.0,
-        happiness_impact = 0.0,
-        intelligence_impact = 0.0,
-        looks_impact = 0.0,
-        icon = "",
-        name = "",
-        description = "",
-    } = {}) {
-        this.needs = needs;
-        this.health_impact = health_impact;
-        this.happiness_impact = happiness_impact;
-        this.intelligence_impact = intelligence_impact;
-        this.looks_impact = looks_impact;
-        this.icon = icon;
-        this.name = name;
-        this.description = description;
     }
 }
 

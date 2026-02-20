@@ -31,9 +31,7 @@ Object.entries(stats).forEach(([key, icon]) => {
     meter_elements[key] = meter;
 });
 
-const shopItems = [consumables["potato_chips"], consumables["alfajor"], consumables["cigarettes"], consumables["beer"]];
-
-function update_meters() {
+export function update_meters() {
     for (let key in meter_elements) {
         meter_elements[key].style.setProperty("--p", state.your[key]);
     }
@@ -153,7 +151,7 @@ export function presentChoice(description, options) {
     const choiceDiv = document.createElement("div");
     choiceDiv.className = "choice-modal";
     choiceDiv.innerHTML = `<p>${description}</p>`;
-
+    twinkleSFX.play();
     options.forEach(opt => {
         const btn = document.createElement("button");
         btn.textContent = opt.text;
