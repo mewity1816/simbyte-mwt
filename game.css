@@ -45,7 +45,7 @@ button {
 }
 
 textarea {
-    background-color: var(--shadow-color);
+    background-color: var(--background-color);
     color: var(--color);
     white-space: pre;
     overflow-wrap: normal;
