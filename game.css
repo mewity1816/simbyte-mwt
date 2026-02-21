@@ -13,12 +13,12 @@
 }
 
 @font-face {
-    font-family: pxl;
+    font-family: terminus;
     src: url("/fnt/terminus_bold.ttf");
 }
 
 body {
-    font-family: pxl;
+    font-family: terminus;
     text-shadow:
         -1px -1px 0 var(--shadow-color),
         1px -1px 0 var(--shadow-color),
@@ -40,7 +40,7 @@ body {
 }
 
 button {
-    font-family: pxl;
+    font-family: terminus;
 }
 
 .flexColumn {
