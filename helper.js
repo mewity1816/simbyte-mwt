@@ -165,3 +165,7 @@ function presentChoice(description, options) {
     textContainer.appendChild(choiceDiv);
     canInteract = false;
 }
+
+let your = new Person();
+let canInteract = true;
+let currentIBPanel = infoBoxPanels.family;
