@@ -24,3 +24,11 @@ saveAndExit.addEventListener("click", () => {
     print("refresh to see your changes");
     space();
 });
+
+toggleFullscreen.addEventListener("click", () => {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+        return;
+    }
+    document.documentElement.requestFullscreen();
+});
