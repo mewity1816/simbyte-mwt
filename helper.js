@@ -9,18 +9,26 @@ const stats = {
 };
 
 Object.entries(stats).forEach(([key, icon]) => {
+    const whateverdiv = document.createElement("div");
+
     const meter = document.createElement("span");
     meter.classList.add("piechart");
-    meter.textContent = icon;
     meter.style.setProperty("--p", your[key]);
-    meter.addEventListener("mouseover", function (e) {
-        meter.textContent = your[key] + "%";
+
+    const iconSpan = document.createElement("strong");
+
+    iconSpan.textContent = icon;
+
+    whateverdiv.addEventListener("mouseover", function (e) {
+        iconSpan.textContent = your[key] + "%";
     });
-    meter.addEventListener("mouseleave", function (e) {
-        meter.textContent = icon;
+    whateverdiv.addEventListener("mouseleave", function (e) {
+        iconSpan.textContent = icon;
     });
 
-    yourStatistics.append(meter);
+    whateverdiv.append(iconSpan);
+    whateverdiv.append(meter);
+    yourStatistics.append(whateverdiv);
     meter_elements[key] = meter;
 });
 
@@ -52,6 +60,7 @@ function clamp(num, min, max) {
 }
 
 function update_meters() {
+    // dont update any game state in this function.
     for (let key in meter_elements) {
         meter_elements[key].style.setProperty("--p", your[key]);
     }
@@ -73,7 +82,6 @@ function update_meters() {
 
     effectsList.innerHTML = null;
 
-    console.log(your);
     for (let e in your.effects) {
         const effect = your.effects[e];
         let effectDiv = document.createElement("div");
@@ -123,10 +131,11 @@ function update_meters() {
         effectsList.append(effectDiv);
     }
 
-    your.happiness = clamp(your.happiness, 0, 100);
-    your.intelligence = clamp(your.intelligence, 0, 100);
-    your.looks = clamp(your.looks, 0, 100);
-    your.health = clamp(your.health, 0, 100);
+
+    // this is an exception to the guideline at the top of this function. ty
+    Object.entries(stats).forEach(([key, _]) => {
+        your[key] = Math.floor(clamp(your[key], 0, 100));
+    });
 
     yourInfo.textContent = `${your.name} ${your.surname} - $${your.money}`;
 

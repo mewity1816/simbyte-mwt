@@ -108,16 +108,19 @@ class Person {
         this.crunchyness = rand_int(100) / 100;
         this.softness = rand_int(100) / 100;
 
+        this.updateCareerPotential();
+        // 1999 is the peak of human civilization
+        let start = new Date(99, 0, 1);
+        let end = new Date(99, 11, 31);
+        this.birthday = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    }
+
+    updateCareerPotential() {
         this.careerPotential = Math.max(
             (this.intelligence * 1.5) + (this.looks * 0.5),
             (this.looks * 1.5) + (this.intelligence * 0.5),
             (this.intelligence + this.looks)
         );
-
-        // 1999 is the peak of human civilization
-        let start = new Date(99, 0, 1);
-        let end = new Date(99, 11, 31);
-        this.birthday = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
     }
 }
 

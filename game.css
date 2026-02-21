@@ -1,7 +1,8 @@
 :root {
     --color: white;
     --background-color: #333;
-    --spacing: 10px;
+    --shadow-color: #000;
+    --spacing: 5px;
 }
 
 * {
@@ -14,29 +15,20 @@
 @font-face {
     font-family: pxl;
     src: url("/fnt/terminus_bold.ttf");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
 }
 
 body {
     font-family: pxl;
-    text-shadow: 1px 1px #000;
     text-shadow:
-        -1px -1px 0 #000,
-        1px -1px 0 #000,
-        -1px 1px 0 #000,
-        1px 1px 0 #000;
+        -1px -1px 0 var(--shadow-color),
+        1px -1px 0 var(--shadow-color),
+        -1px 1px 0 var(--shadow-color),
+        1px 1px 0 var(--shadow-color);
 }
 
 .button {
     padding: var(--spacing);
     border: 1px solid var(--color);
-}
-
-button {
-    font-family: pxl;
-
 }
 
 .button:hover {
@@ -45,6 +37,10 @@ button {
 
 .button:active {
     filter: invert();
+}
+
+button {
+    font-family: pxl;
 }
 
 .flexColumn {
@@ -67,14 +63,9 @@ button {
 @media (max-width: 600px) {
     .piechart {
         width: 20px;
-        aspect-ratio: auto;
         border-radius: 0;
-        --h: calc(var(--p) / 100);
         background: color(srgb calc(1 - var(--h)) var(--h) 0) calc(var(--p) * 1%);
-        height: calc(var(--h) * 50px);
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        height: calc(var(--h) * 29px);
     }
 }
 
@@ -94,8 +85,21 @@ button {
     cursor: pointer;
 }
 
+#yourStatistics > div {
+    height: 40px;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+}
+
+#yourStatistics > div > strong {
+    align-self: center;
+    position: absolute;
+    background-color: #00000000;
+}
+
 .choice-modal {
-    border: 1px solid white;
+    border: 1px solid var(--color);
     padding: var(--spacing);
     display: flex;
     flex-direction: column;
@@ -107,7 +111,6 @@ button {
     z-index: 1;
     flex-shrink: 0;
     padding: var(--spacing);
-    margin: var(--spacing);
     border: 1px solid var(--color);
     user-select: none;
 
@@ -121,13 +124,13 @@ button {
 }
 
 #navbar>div {
+    gap: var(--spacing);
     display: flex;
-    gap: 10px;
     align-items: end;
+    margin: var(--spacing);
 }
 
 #textContainer {
-    margin: var(--spacing);
     flex: 1;
     overflow-y: auto;
     min-height: 0;
@@ -147,15 +150,15 @@ button {
 
 #effectsList {
     position: absolute;
-    bottom: 5px;
-    right: 20px;
+    bottom: var(--spacing);
+    right: 10px;
     display: flex;
     align-items: end;
 }
 
 #effectsList > div {
-    padding: 10px;
-    border: #fff 1px solid;
+    padding: var(--spacing);
+    border: var(---color) 1px solid;
     width: fit-content;
 }
 
