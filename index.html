@@ -14,7 +14,7 @@
     <div class="content">
         <div id="navbar">
             <span id="yourInfo"></span>
-            <span id="settings" class="button">⚙️</span>
+            <span id="showSettings" class="button">⚙️</span>
         </div>
         <div id="textContainer"></div>
         <div class="moveToLeft">
@@ -31,11 +31,17 @@
         </div>
     </div>
     <div id="infoBox" style="display:none; " class="infoBox"></div>
+    <div id="settingsContainer" class="blockOutBG" style="display:none">
+        <div id="settingsBox">
+            <button id="saveAndExit">Save and exit</button>
+        </div>
+    </div>
     <script src="rng.js"></script>
     <script src="class.js"></script>
     <script src="data.js"></script>
     <script src="helper.js"></script>
-    <script type="module" src="game.js"></script>
+    <script src="game.js"></script>
+    <script src="settings.js"></script>
 </body>
 
 </html>

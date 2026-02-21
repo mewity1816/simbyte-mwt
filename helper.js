@@ -8,6 +8,10 @@ const stats = {
     looks: "👁️"
 };
 
+let your = new Person();
+let canInteract = true;
+let currentIBPanel = infoBoxPanels.family;
+
 Object.entries(stats).forEach(([key, icon]) => {
     const whateverdiv = document.createElement("div");
 
@@ -31,6 +35,14 @@ Object.entries(stats).forEach(([key, icon]) => {
     yourStatistics.append(whateverdiv);
     meter_elements[key] = meter;
 });
+
+function toggleVisibility(element) {
+    if (element.style.display == "none") {
+        element.style.display = ""
+    } else {
+        element.style.display = "none"
+    }
+}
 
 function print(urtext) {
     let txt = document.createElement("span");
@@ -165,7 +177,3 @@ function presentChoice(description, options) {
     textContainer.appendChild(choiceDiv);
     canInteract = false;
 }
-
-let your = new Person();
-let canInteract = true;
-let currentIBPanel = infoBoxPanels.family;

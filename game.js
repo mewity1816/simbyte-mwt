@@ -102,5 +102,9 @@ showFamilyTree.addEventListener("click", function (e) {
     infoBox.style.display = "flex";
 });
 
+showSettings.addEventListener("click", function (e) {
+    toggleVisibility(settingsContainer);
+});
+
 window.addEventListener('beforeunload', function (e) {e.preventDefault(); });
 begin();
