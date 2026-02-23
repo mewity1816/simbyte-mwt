@@ -89,6 +89,7 @@ textarea {
     flex-direction: column;
     align-items: flex-end;
     background-color: var(--background-color);
+    gap: 12px;
 }
 
 #close {

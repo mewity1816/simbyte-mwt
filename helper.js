@@ -10,6 +10,7 @@ const stats = {
 
 let your = new Person();
 let canInteract = true;
+let pastGenerationsAmount = 2;
 let chatlogs = [];
 let currentIBPanel = infoBoxPanels.family;
 
@@ -195,4 +196,35 @@ function presentChoice(description, options) {
 
     textContainer.appendChild(choiceDiv);
     canInteract = false;
+}
+
+function generateAncestors(person, generationsLeft) {
+    if (generationsLeft <= 0) return;
+    person.giveParents();
+
+    person.family.forEach(parentEntry => {
+        let parent = parentEntry.person;
+        parent.age += person.age; 
+
+        generateAncestors(parent, generationsLeft - 1);
+    });
+
+    person.inheritTraits();
+}
+
+function createTreeHTML(node) {
+    let el = node;
+    if (!el.name) el = el["person"];
+    
+    let html = `<li><span href="#">${el.name} ${el.surname}</span>`;
+    if (el.family && el.family.length > 0) {
+        html += `<ul>`;
+        el.family.forEach(member => {
+            html += createTreeHTML(member); // RECURSION!!!!
+        });
+        html += `</ul>`;
+    }
+
+    html += `</li>`;
+    return html;
 }

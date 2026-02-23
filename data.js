@@ -218,21 +218,23 @@ let shopItems = [consumables["potato_chips"], consumables["alfajor"], consumable
 
 let infoBoxPanels = {
     family: () => {
-        for (let entry in your.family) {
-            let person = your.family[entry]["person"];
-            let relation = your.family[entry]["relation"];
-            let new_entry = document.createElement("span");
-            new_entry.textContent = `${person.gender} ${Relation.getString(relation).toLowerCase()} - ${person.name} ${person.surname} - ${person.age}`;
-            infoBox.append(new_entry);
-        }
+        let mainTreeDiv = document.createElement("div");
+        mainTreeDiv.classList.add("tree");
+        const finalOutput = `<ul>${createTreeHTML(your)}</ul>`;
+        mainTreeDiv.innerHTML = finalOutput;
+        infoBox.append(mainTreeDiv);
     },
     shop: () => {
         for (let i in shopItems) {
             let item = shopItems[i];
             let name = item["name"];
             let price = item["price"];
-            let new_entry = document.createElement("button");
-            new_entry.textContent = `${name} - $${price}`;
+            let consumableDiv = document.createElement("div");
+            let new_entry = document.createElement("span");
+            new_entry.classList.add("button");
+            new_entry.style.marginRight = "4px";
+            consumableDiv.style.marginBottom = "4px";
+            new_entry.textContent = name;
             new_entry.onclick = () => {
                 if (your.money >= price) {
                     your.money -= price;
@@ -264,7 +266,12 @@ let infoBoxPanels = {
                 }
                 update_meters();
             };
-            infoBox.append(new_entry);
+            
+            let priceElement = document.createElement("span");
+            priceElement.textContent = `$${price}`;
+            consumableDiv.append(new_entry)
+            consumableDiv.append(priceElement)
+            infoBox.append(consumableDiv);
         }
     },
 }
