@@ -90,7 +90,8 @@ function generateSaveFile() {
 }
 
 function update_meters() {
-    // dont update any game state in this function.
+    Object.entries(stats).forEach(([key, _]) => your[key] = Math.floor(clamp(your[key], 0, 100)));
+    // dont update any game state beyond the line above.
     for (let key in meter_elements) {
         meter_elements[key].style.setProperty("--p", your[key]);
     }
@@ -160,12 +161,6 @@ function update_meters() {
         effectDiv.append(infoDiv);
         effectsList.append(effectDiv);
     }
-
-
-    // this is an exception to the guideline at the top of this function. ty
-    Object.entries(stats).forEach(([key, _]) => {
-        your[key] = Math.floor(clamp(your[key], 0, 100));
-    });
 
     yourInfo.textContent = `${your.name} ${your.surname} - $${your.money}`;
 
