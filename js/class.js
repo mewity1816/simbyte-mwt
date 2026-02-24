@@ -82,8 +82,7 @@ class Relative {
 }
 
 class LifeEvent {
-    constructor({ id, title, description, chance, minAge = 0, maxAge = 100, criteria = () => true, effect = () => { } }) {
-        this.id = id;
+    constructor({title, description, chance, minAge = 0, maxAge = 100, criteria = () => true, effect = () => {}}) {
         this.title = title;
         this._description = description;
         this.chance = chance; // 0.0 to 1.0

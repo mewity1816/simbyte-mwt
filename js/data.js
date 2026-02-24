@@ -4,7 +4,6 @@ let surnames = ["Smith", "Johnson", "Bocse", "Codon", "Williams", "Brown", "Jone
 let birth_reasons = ["i was born in a normal, healthy way.","i was born after my father's condom broke","i was summoned at a cult ritual","i was born in a normal way, however my mother died to due maternal death","i was an inhome birth"]
 let eventPool = [
     new LifeEvent({
-        id: "vegetables",
         title: "Plis No BroColly.",
         description: () => 0 == rand_int(2) 
             ? "Your father is forcing you to eat your greens." 
@@ -34,7 +33,6 @@ let eventPool = [
         }
     }),
     new LifeEvent({
-        id: "sickness",
         title: "I feel like shit!",
         description: "You caught a nasty disease.",
         chance: 0.05,
@@ -47,7 +45,6 @@ let eventPool = [
         }
     }),
     new LifeEvent({
-        id: "bully_encounter",
         title: "Bully",
         description: () => "Someone named " + boy_names[rand_int(boy_names.length)] + " wants your lunch money.",
         chance: 0.5,
@@ -86,7 +83,6 @@ let eventPool = [
         }
     }),
     new LifeEvent({
-        id: "tweaker_alert",
         title: "Tweaker Alert!!!",
         description: "A tweaker on the street assaulted you.",
         chance: 0.05,
@@ -99,7 +95,6 @@ let eventPool = [
         }
     }),
     new LifeEvent({
-        id: "school_start",
         title: "Fresh meat",
         description: "You're starting school.",
         chance: 1,
@@ -116,7 +111,6 @@ let eventPool = [
         }
     }),
     new LifeEvent({
-        id: "dropped_wallet",
         title: "Found a Wallet",
         description: "You found a wallet on the floor with $50 inside.",
         chance: 0.08,
@@ -144,7 +138,6 @@ let eventPool = [
         }
     }),
     new LifeEvent({
-        id: "school_over",
         title: "Good morning.",
         description: "You're done with school.",
         chance: 1.,

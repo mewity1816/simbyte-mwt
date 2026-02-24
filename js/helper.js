@@ -245,7 +245,7 @@ function processYearlyEvents(person) {
     }
 
     eligibleEvents.forEach(event => {
-        if (Math.random() < event.chance) {
+        if (rand_int(100) / 100 < event.chance) {
             header(event.title);
             print(event.description);
             event.effect(person);
