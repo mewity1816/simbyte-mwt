@@ -47,7 +47,7 @@ let eventPool = [
     new LifeEvent({
         title: "Bully",
         description: () => "Someone named " + boy_names[rand_int(boy_names.length)] + " wants your lunch money.",
-        chance: 0.5,
+        chance: () => 1 - ((your.looks + your.strength) / 2)/100,
         minAge: 6,
         maxAge: 14,
         criteria: (p) => (p.looks + p.strength)/2 < 75,
