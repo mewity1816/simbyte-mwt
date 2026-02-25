@@ -319,6 +319,47 @@ let eventPool = [
 		    ]);
 	    }
     }),
+	new LifeEvent({
+        title: "Under the bus.",
+        description: "While in recess, you got dared to pull on " + girl_names[rand_int(girl_names.length)] + "'s hair and now shes demanding to know who did it.",
+        chance: 1,
+        minAge: 6,
+        maxAge: 11,
+        effect: (p) => {
+           	presentChoice("What do you do?", [
+              	{
+                   	text: "Lie",
+                   	callback: () => {
+                       	p.happiness += 10;
+                       	p.intelligence -= 10;
+                       	print("You lied and said that " + boy_names[rand_int(boy_names.length)] + " did it.");
+                   	}
+               	},
+               	{
+                   	text: "Confess",
+                   	callback: () => {
+                       	p.happiness -= 10;
+                       	p.intelligence += 10;
+                       	print("You confessed and said that you did it.");
+                   	}
+               	}
+           	]);
+        }
+    }),
+		new LifeEvent({
+      	  title: "Medium rare meat.",
+       	  description: "You're starting middle school",
+          chance: 1.,
+    	  minAge: 11,
+     	  maxAge: 11,
+    }),
+    	new LifeEvent({
+        title: "Medium well meat.",
+        description: "You're starting high school",
+        chance: 1.,
+        minAge: 14,
+        maxAge: 14,
+    }),
 ];
 
 let addictions = {
