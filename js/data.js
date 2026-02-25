@@ -34,13 +34,13 @@ let eventPool = [
     }),
     new LifeEvent({
         title: "I feel like shit!",
-        description: "You caught a nasty disease.",
+        description: "You caught a common cold.",
         chance: 0.05,
         minAge: 5,
-        maxAge: 50,
+        maxAge: 999,
         effect: (p) => {
-            p.health -= 25;
-            p.happiness -= 30;
+            p.effects.push(sickness["cold"])
+            noticeSFX.play();
             print("You spent a week in bed shivering.");
         }
     }),
@@ -64,7 +64,7 @@ let eventPool = [
                             print("You won and got theirs instead.");
                         } else {
                             p.money = 0;
-                            p.strength += 5;
+                            p.strength += 5; //this is Sline 67 hahahahaha
                             print("You lost the battle (and all your money too).");
                         }
                     }
@@ -143,9 +143,128 @@ let eventPool = [
         chance: 1.,
         minAge: 18,
         maxAge: 18,
-    })
-];
+    }),
+    new LifeEvent({
+        title: "I'm interested...",
+        description: "There's an old person in an alleyway promising you happiness",
+        chance: 0.1,
+        minAge: 14,
+        maxAge: 40,
+        effect: (p) => {
+            presentChoice("What do you do?", [
+                {
+                    text: "Accept the deal.",
+                    callback: () => { 
+                        if (rand_int(2)) {
+                            p.happiness += 15;
+                            p.health += 15;
+                            print("He gave you a smoothie and a cookie."); 
+                         } else {
+                             p.effects.push(addictions["nicotine"])
+                             update_meters();
+                             noticeSFX.play();
+                             print("He gave a cigarette and now you're addicted."); 
 
+                    }
+                }},
+                {
+                    text: "Leave.",
+                    callback: () => {
+                        print("You left safely.");
+                    }
+                }
+            ]);
+        }
+    }),
+    new LifeEvent({
+        title: "Hop on Space Shooters",
+        description: "You've been having the urge to go to the nearby arcade",
+        chance: 0.1,
+        minAge: 7,
+        maxAge: 15,
+        effect: (p) => {
+            presentChoice("Do you go?", [
+                {
+                    text: "Yes. (-20 dollars, +30 happiness).",
+                    callback: () => { 
+                        if (p.money >= 20) {
+                            p.happiness += 30;
+                            p.money -= 20;
+                            print("You played some damn good games.");
+                        } else {
+                            p.happiness -= 30;
+                            print("You didn't have enough money")
+                    }
+                }},
+                {
+                    text: "No. (-30 happiness, +15 intelligence).",
+                    callback: () => {
+                        p.happiness -= 30;
+                        p.intelligence += 15;
+                        print("You stayed at home.");
+                    }
+                }
+            ]);
+        }
+    }),
+    new LifeEvent({
+        title: "The vast internet.",
+        description: "You just got a phone. You've now unlocked features related to the internet. (normally yeah you would unlock stuff but we havent made that yet so TODO)",
+        chance: 1.,
+        minAge: 12,
+        maxAge: 12,
+    }),
+    new LifeEvent({
+        title: "Growing up.",
+        description: "You're now a teenager. You've now unlocked features related to being a teenager. (normally yeah you would unlock stuff but we havent made that yet so TODO)",
+        chance: 1.,
+        minAge: 13,
+        maxAge: 13,
+    }),
+    new LifeEvent({
+        title: "Growing up... again.",
+        description: "You're now an adult. You've now unlocked features related to being an adult. (normally yeah you would unlock stuff but we havent made that yet so TODO)",
+        chance: 1.,
+        minAge: 18,
+        maxAge: 18,
+    }),
+    new LifeEvent({
+        title: "Lucky.",
+        description: "You found a dollar while walking down the street.",
+        chance: 0.2,
+        minAge: 4,
+        maxAge: 50, //at that point, a dollar wont matter
+        effect: (p) => {
+            p.money += 1;
+            p.happiness += 5;
+            print("You're one dollar richer.");
+        }
+    }),
+    new LifeEvent({
+        title: "Depression.",
+        description: "You have depression.",
+        chance: 0.05,
+        minAge: 19,
+        maxAge: 60,
+        effect: (p) => {
+            p.effects.push(sickness["depression"])
+            noticeSFX.play();
+        }
+    }),
+    new LifeEvent({
+        title: "I feel like shit!",
+        description: "You caught a fever.",
+        chance: 0.05,
+        minAge: 5,
+        maxAge: 999,
+        effect: (p) => {
+            p.effects.push(sickness["fever"])
+            noticeSFX.play();
+            print("You spent a week in bed sweating.");
+        }
+    }),
+];
+ 
 let addictions = {
     nicotine: new Effect({
         health: -5,
@@ -163,6 +282,33 @@ let addictions = {
         icon: "🍺",
         name: "Alcohol",
         description: "Numbs the mind."
+    }),
+}
+
+let sickness = {
+    depression: new Effect({
+        health: -5,
+        happiness: -50,
+        monetary: -10,
+        icon: "💧",
+        name: "Depression",
+        description: "Makes everything worse."
+    }),
+    fever: new Effect({
+        health: -15,
+        happiness: -5,
+        monetary: 0,
+        icon: "🔥",
+        name: "Fever",
+        description: "On fire."
+    }),
+    cold: new Effect({
+        health: -15,
+        happiness: -5,
+        monetary: 0,
+        icon: "❄",
+        name: "Common cold",
+        description: "You miss the time you could breathe through your nose."
     }),
 }
 
