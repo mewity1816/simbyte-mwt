@@ -60,8 +60,8 @@ class Relation {
 
     static #labels = {
         [Relation.Parent]: "Parent",
-        [Relation.GrandParent]: "GrandParent",
-        [Relation.GreatGrandParent]: "GreatGrandParent",
+        [Relation.GrandParent]: "Grandparent",
+        [Relation.GreatGrandParent]: "Great-grandparent",
         [Relation.Mascot]: "Mascot",
         [Relation.Descendant]: "Descendant",
         [Relation.Friend]: "Friend",
